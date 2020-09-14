@@ -27,8 +27,8 @@ mvn spring-boot:run
 Set up some different tenants:
 
 ```
-curl -X POST "localhost:8088/tenants?tenantId=tenant1&schema=tenant1&password=secret"
-curl -X POST "localhost:8088/tenants?tenantId=tenant2&schema=tenant2&password=secret"
+curl -X POST "localhost:8088/tenants?tenantId=tenant1&db=tenant1&password=secret"
+curl -X POST "localhost:8088/tenants?tenantId=tenant2&db=tenant2&password=secret"
 ```
 
 ## Configuration

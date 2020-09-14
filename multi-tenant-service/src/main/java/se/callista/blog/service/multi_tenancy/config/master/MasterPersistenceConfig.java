@@ -3,7 +3,9 @@ package se.callista.blog.service.multi_tenancy.config.master;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -22,42 +24,48 @@ import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = { "se.callista.blog.service.multi_tenancy.repository" },
-                       entityManagerFactoryRef = "masterEntityManagerFactory",
+        basePackages = { "${multitenancy.master.repository.packages}" },
+        entityManagerFactoryRef = "masterEntityManagerFactory",
         transactionManagerRef = "masterTransactionManager"
 )
-@EnableConfigurationProperties(JpaProperties.class)
+@EnableConfigurationProperties({DataSourceProperties.class, JpaProperties.class})
 public class MasterPersistenceConfig {
     private final ConfigurableListableBeanFactory beanFactory;
     private final JpaProperties jpaProperties;
+    private final String entityPackages;
 
     @Autowired
     public MasterPersistenceConfig(ConfigurableListableBeanFactory beanFactory,
-                                   JpaProperties jpaProperties) {
+                                   JpaProperties jpaProperties,
+                                   @Value("${multitenancy.master.entityManager.packages}")
+                                   String entityPackages) {
         this.beanFactory = beanFactory;
         this.jpaProperties = jpaProperties;
+        this.entityPackages = entityPackages;
     }
 
-    @Bean(name = "masterEntityManagerFactory")
+    @Bean
     public LocalContainerEntityManagerFactoryBean masterEntityManagerFactory(
             @Qualifier("masterDataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
         em.setPersistenceUnitName("master-persistence-unit");
-        em.setPackagesToScan("se.callista.blog.service.multi_tenancy.domain");
+        em.setPackagesToScan(entityPackages);
         em.setDataSource(dataSource);
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
 
         Map<String, Object> properties = new HashMap<>(this.jpaProperties.getProperties());
+        properties.put(AvailableSettings.PHYSICAL_NAMING_STRATEGY, "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
+        properties.put(AvailableSettings.IMPLICIT_NAMING_STRATEGY, "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
         properties.put(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(this.beanFactory));
         em.setJpaPropertyMap(properties);
 
         return em;
     }
 
-    @Bean(name = "masterTransactionManager")
+    @Bean
     public JpaTransactionManager masterTransactionManager(
             @Qualifier("masterEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

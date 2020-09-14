@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component("dynamicDataSourceBasedMultiTenantConnectionProvider")
+@Component
 public class DynamicDataSourceBasedMultiTenantConnectionProvider
         extends AbstractDataSourceBasedMultiTenantConnectionProviderImpl {
 
@@ -47,7 +47,7 @@ public class DynamicDataSourceBasedMultiTenantConnectionProvider
     @Value("${multitenancy.datasource-cache.maximumSize:100}")
     private Long maximumSize;
 
-    @Value("${multitenancy.datasource-cache.expireAfterAccess:60}")
+    @Value("${multitenancy.datasource-cache.expireAfterAccess:10}")
     private Integer expireAfterAccess;
 
     @Value("${encryption.secret}")
@@ -96,7 +96,7 @@ public class DynamicDataSourceBasedMultiTenantConnectionProvider
 
         HikariDataSource ds = dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
 
-        ds.setUsername(tenant.getSchema());
+        ds.setUsername(tenant.getDb());
         ds.setPassword(decryptedPassword);
         ds.setJdbcUrl(tenant.getUrl());
 

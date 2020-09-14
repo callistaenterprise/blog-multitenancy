@@ -1,12 +1,20 @@
 package se.callista.blog.tenant_management.service;
 
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import se.callista.blog.tenant_management.persistence.PostgresqlTestContainer;
 import se.callista.blog.tenant_management.annotation.SpringBootDbIntegrationTest;
+import se.callista.blog.tenant_management.persistence.PostgresqlTestContainer;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 @Testcontainers
 @SpringBootDbIntegrationTest
@@ -18,4 +26,15 @@ class TenantManagementServiceTest {
     @Autowired
     private TenantManagementService tenantManagementService;
 
+    @Test
+    @ExpectedDataSet({"service/tenants.yml"})
+    void createTenant1() throws SQLException {
+        String dbHost = System.getProperty("DB_HOST");
+        tenantManagementService.createTenant("tenant1", "tenant1_db", "secret");
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://" + dbHost + "/tenant1_db", "tenant1_db", "secret");
+        DataSource tenantDataSource = new SingleConnectionDataSource(connection, false);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(tenantDataSource);
+        int count = jdbcTemplate.queryForObject("select count(*) from product", Integer.class);
+        Assert.assertEquals(0, count);
+    }
 }

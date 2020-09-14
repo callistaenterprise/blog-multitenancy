@@ -14,11 +14,11 @@ databaseChangeLog:
               primaryKey: true
               primaryKeyName: tenant_pkey
         - column:
-            name: schema
+            name: db
+            type: VARCHAR(30)
+        - column:
+            name: password
             type: VARCHAR(30)
         - column:
             name: url
             type: VARCHAR(256)
-        - column:
-            name: password
-            type: VARCHAR(30)

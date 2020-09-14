@@ -1,7 +1,6 @@
 package se.callista.blog.tenant_management.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -13,10 +12,9 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
+@Slf4j
 @Service
 public class EncryptionServiceImpl implements EncryptionService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(EncryptionServiceImpl.class);
 
     @Override
     public String encrypt(String strToEncrypt, String secret, String salt) {
@@ -33,7 +31,7 @@ public class EncryptionServiceImpl implements EncryptionService {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
             return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
         } catch (Exception e) {
-            LOG.error("Error while encrypting: ", e);
+            log.error("Error while encrypting: ", e);
             return null;
         }
     }
