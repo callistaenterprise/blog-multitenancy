@@ -29,7 +29,7 @@ class TenantRepositoryTest {
 
         Optional<Tenant> tenant = tenantRepository.findById("tenant1");
         assertThat(tenant).isPresent();
-        assertThat(tenant.get().getUrl()).endsWith("?currentSchema=tenant1_schema");
+        assertThat(tenant.get().getSchema()).isEqualTo("tenant1_schema");
 
     }
 

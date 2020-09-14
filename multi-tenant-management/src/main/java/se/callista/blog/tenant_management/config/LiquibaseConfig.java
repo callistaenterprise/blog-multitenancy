@@ -2,21 +2,23 @@ package se.callista.blog.tenant_management.config;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
 @Lazy(false)
 @Configuration
-@EnableConfigurationProperties(LiquibaseProperties.class)
+@ConditionalOnProperty(name = "multitenancy.master.liquibase.enabled", havingValue = "true", matchIfMissing = true)
 public class LiquibaseConfig {
+
+    @Value("${multitenancy.master.schema:#{null}}")
+    private String masterSchema;
 
     @Bean
     @ConfigurationProperties("multitenancy.master.liquibase")
@@ -25,13 +27,19 @@ public class LiquibaseConfig {
     }
 
     @Bean
-    public SpringLiquibase liquibase(@LiquibaseDataSource ObjectProvider<DataSource> liquibaseDataSource) {
+    @ConfigurationProperties("multitenancy.tenant.liquibase")
+    public LiquibaseProperties tenantLiquibaseProperties() {
+        return new LiquibaseProperties();
+    }
+
+    @Bean
+    public SpringLiquibase liquibase(ObjectProvider<DataSource> liquibaseDataSource) {
         LiquibaseProperties liquibaseProperties = masterLiquibaseProperties();
         SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setDefaultSchema(this.masterSchema);
         liquibase.setDataSource(liquibaseDataSource.getIfAvailable());
         liquibase.setChangeLog(liquibaseProperties.getChangeLog());
         liquibase.setContexts(liquibaseProperties.getContexts());
-        liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setLiquibaseSchema(liquibaseProperties.getLiquibaseSchema());
         liquibase.setLiquibaseTablespace(liquibaseProperties.getLiquibaseTablespace());
         liquibase.setDatabaseChangeLogTable(liquibaseProperties.getDatabaseChangeLogTable());

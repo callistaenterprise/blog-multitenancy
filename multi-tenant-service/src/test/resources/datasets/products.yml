@@ -1,5 +1,7 @@
-product:
+tenant1_schema.product:
   - id: 1
     name: Product 1
   - id: 2
     name: Product 2
+
+tenant2_schema.product:

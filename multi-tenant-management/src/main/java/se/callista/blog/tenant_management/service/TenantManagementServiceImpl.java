@@ -2,54 +2,40 @@ package se.callista.blog.tenant_management.service;
 
 import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringLiquibase;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.StatementCallback;
 import org.springframework.stereotype.Service;
 import se.callista.blog.tenant_management.domain.entity.Tenant;
 import se.callista.blog.tenant_management.repository.TenantRepository;
 
 import javax.sql.DataSource;
 
-@Slf4j
 @Service
-@EnableConfigurationProperties(LiquibaseProperties.class)
 public class TenantManagementServiceImpl implements TenantManagementService {
 
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
     private final LiquibaseProperties liquibaseProperties;
     private final ResourceLoader resourceLoader;
-    private final TenantRepository tenantRepo;
-
-    private final String urlPrefix;
-    private final String liquibaseChangeLog;
-    private final String liquibaseContexts;
+    private final TenantRepository tenantRepository;
 
     @Autowired
     public TenantManagementServiceImpl(DataSource dataSource,
                                        JdbcTemplate jdbcTemplate,
-                                       @Qualifier("masterLiquibaseProperties")
+                                       @Qualifier("tenantLiquibaseProperties")
                                        LiquibaseProperties liquibaseProperties,
                                        ResourceLoader resourceLoader,
-                                       TenantRepository tenantRepo,
-                                       @Value("${multitenancy.master.datasource.url}") String urlPrefix,
-                                       @Value("${multitenancy.tenant.liquibase.changeLog}") String liquibaseChangeLog,
-                                       @Value("${multitenancy.tenant.liquibase.contexts:}") String liquibaseContexts
-    ) {
+                                       TenantRepository tenantRepository) {
         this.dataSource = dataSource;
         this.jdbcTemplate = jdbcTemplate;
         this.liquibaseProperties = liquibaseProperties;
         this.resourceLoader = resourceLoader;
-        this.tenantRepo = tenantRepo;
-        this.urlPrefix = urlPrefix;
-        this.liquibaseChangeLog = liquibaseChangeLog;
-        this.liquibaseContexts = liquibaseContexts;
+        this.tenantRepository = tenantRepository;
     }
 
     private static final String VALID_SCHEMA_NAME_REGEXP = "[A-Za-z0-9_]*";
@@ -62,13 +48,23 @@ public class TenantManagementServiceImpl implements TenantManagementService {
             throw new TenantCreationException("Invalid schema name: " + schema);
         }
 
-        String url = urlPrefix+"?currentSchema="+schema;
+        try {
+            createSchema(schema);
+            runLiquibase(dataSource, schema);
+        } catch (DataAccessException e) {
+            throw new TenantCreationException("Error when creating schema: " + schema, e);
+        } catch (LiquibaseException e) {
+            throw new TenantCreationException("Error when populating schema: ", e);
+        }
         Tenant tenant = Tenant.builder()
                 .tenantId(tenantId)
                 .schema(schema)
-                .url(url)
                 .build();
-        tenantRepo.save(tenant);
+        tenantRepository.save(tenant);
+    }
+
+    private void createSchema(String schema) {
+        jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt.execute("CREATE SCHEMA " + schema));
     }
 
     private void runLiquibase(DataSource dataSource, String schema) throws LiquibaseException {
@@ -81,10 +77,18 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         liquibase.setResourceLoader(resourceLoader);
         liquibase.setDataSource(dataSource);
         liquibase.setDefaultSchema(schema);
-        liquibase.setChangeLog(liquibaseChangeLog);
-        liquibase.setContexts(liquibaseContexts);
+        liquibase.setChangeLog(liquibaseProperties.getChangeLog());
+        liquibase.setContexts(liquibaseProperties.getContexts());
+        liquibase.setLiquibaseSchema(liquibaseProperties.getLiquibaseSchema());
+        liquibase.setLiquibaseTablespace(liquibaseProperties.getLiquibaseTablespace());
+        liquibase.setDatabaseChangeLogTable(liquibaseProperties.getDatabaseChangeLogTable());
+        liquibase.setDatabaseChangeLogLockTable(liquibaseProperties.getDatabaseChangeLogLockTable());
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
         liquibase.setShouldRun(liquibaseProperties.isEnabled());
+        liquibase.setLabels(liquibaseProperties.getLabels());
+        liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
+        liquibase.setRollbackFile(liquibaseProperties.getRollbackFile());
+        liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
         return liquibase;
     }
 }

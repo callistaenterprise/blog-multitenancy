@@ -1,6 +1,10 @@
 server:
   port: 8088
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/blog
+    username: postgres
+    password: secret
   jpa:
     properties:
       hibernate:
@@ -10,14 +14,8 @@ spring:
     open-in-view: false
 multitenancy:
   master:
-    datasource:
-      url: jdbc:postgresql://localhost:5432/blog
-      username: postgres
-      password: secret
     liquibase:
       changeLog: classpath:db/changelog/db.changelog-master.yaml
   tenant:
-    datasource:
-      url-prefix: jdbc:postgresql://localhost:5432/blog
     liquibase:
       changeLog: classpath:db/changelog/db.changelog-tenant.yaml

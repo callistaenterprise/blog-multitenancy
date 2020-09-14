@@ -2,21 +2,18 @@ package se.callista.blog.service.config;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
-@Profile("!test")
 @Lazy(false)
 @Configuration
-@EnableConfigurationProperties(LiquibaseProperties.class)
+@ConditionalOnProperty(name = "multitenancy.master.liquibase.enabled", havingValue = "true", matchIfMissing = true)
 public class LiquibaseConfig {
 
     @Bean
@@ -26,7 +23,7 @@ public class LiquibaseConfig {
     }
 
     @Bean
-    public SpringLiquibase liquibase(@LiquibaseDataSource ObjectProvider<DataSource> liquibaseDataSource) {
+    public SpringLiquibase masterLiquibase(ObjectProvider<DataSource> liquibaseDataSource) {
         LiquibaseProperties liquibaseProperties = masterLiquibaseProperties();
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(liquibaseDataSource.getIfAvailable());

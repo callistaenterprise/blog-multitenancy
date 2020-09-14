@@ -1,6 +1,10 @@
 server:
   port: 8080
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/blog
+    username: postgres
+    password: secret
   jpa:
     properties:
       hibernate:
@@ -9,12 +13,20 @@ spring:
       ddl-auto: none
     open-in-view: false
 multitenancy:
+  schema-cache:
+    maximumSize: 100
+    expireAfterAccess: 10
   master:
-    datasource:
-      url: jdbc:postgresql://localhost:5432/blog
-      username: postgres
-      password: secret
-  tenant:
+    repository:
+      packages: se.callista.blog.service.multi_tenancy.repository
+    entityManager:
+      packages: se.callista.blog.service.multi_tenancy.domain
     liquibase:
-      enabled: true
+      enabled: false
+  tenant:
+    repository:
+      packages: se.callista.blog.service.repository
+    entityManager:
+      packages: se.callista.blog.service.domain
+    liquibase:
       changeLog: classpath:db/changelog/db.changelog-tenant.yaml

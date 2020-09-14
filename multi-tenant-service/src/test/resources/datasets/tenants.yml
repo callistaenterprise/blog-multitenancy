@@ -1,7 +1,5 @@
 public.tenant:
   - tenant_id: tenant1
     schema: tenant1_schema
-    url: "${DB_URL}?currentSchema=tenant1_schema"
   - tenant_id: tenant2
     schema: tenant2_schema
-    url: "${DB_URL}?currentSchema=tenant2_schema"

@@ -3,4 +3,3 @@ properties:
   caseSensitiveTableNames: true
   qualifiedTableNames: true
   datatypeFactory: !!org.dbunit.ext.postgresql.PostgresqlDataTypeFactory {}
-  replacers: [!!se.callista.blog.tenant_management.dbunit.DbUrlReplacer {}]

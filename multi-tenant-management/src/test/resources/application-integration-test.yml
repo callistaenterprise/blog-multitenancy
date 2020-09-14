@@ -8,6 +8,7 @@ spring:
     password: ${DB_PASSWORD}
 multitenancy:
   master:
+    schema: public
     liquibase:
       changeLog: classpath:db/changelog/db.changelog-master.yaml
   tenant:

@@ -2,14 +2,16 @@ spring:
   main:
     lazy-initialization: true
     banner-mode: "off"
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 multitenancy:
   master:
-    datasource:
-      url: ${DB_URL}
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
+    schema: public
     liquibase:
       changeLog: classpath:db/changelog/db.changelog-master-tenant.yaml
+      enabled: true
   tenant:
     datasource:
       url-prefix: ${DB_URL}
