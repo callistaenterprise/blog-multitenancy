@@ -1,3 +1,4 @@
+databaseName: blog
 server:
   port: 8088
 spring:
@@ -18,7 +19,7 @@ multitenancy:
       changeLog: classpath:db/changelog/db.changelog-master.yaml
   tenant:
     datasource:
-      url-prefix: jdbc:postgresql://localhost:5432/blog
+      url-prefix: jdbc:postgresql://localhost:5432/
     liquibase:
       changeLog: classpath:db/changelog/db.changelog-tenant.yaml
 encryption:

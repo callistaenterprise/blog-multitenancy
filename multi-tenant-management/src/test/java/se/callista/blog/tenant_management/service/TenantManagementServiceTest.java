@@ -18,4 +18,9 @@ class TenantManagementServiceTest {
     @Autowired
     private TenantManagementService tenantManagementService;
 
+    @Test
+    @ExpectedDataSet({"service/tenants.yml", "service/products.yml"})
+    void createTenant() {
+        tenantManagementService.createTenant("tenant1", "tenant1_schema", "secret");
+    }
 }

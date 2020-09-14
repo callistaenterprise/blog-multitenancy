@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.StatementCallback;
 import org.springframework.stereotype.Service;
 import se.callista.blog.tenant_management.domain.entity.Tenant;
 import se.callista.blog.tenant_management.repository.TenantRepository;
+import se.callista.blog.tenant_management.util.EncryptionService;
 
 import javax.sql.DataSource;
 
@@ -28,6 +31,7 @@ public class TenantManagementServiceImpl implements TenantManagementService {
     private final ResourceLoader resourceLoader;
     private final TenantRepository tenantRepo;
 
+    private final String databaseName;
     private final String urlPrefix;
     private final String liquibaseChangeLog;
     private final String liquibaseContexts;
@@ -42,7 +46,8 @@ public class TenantManagementServiceImpl implements TenantManagementService {
                                        LiquibaseProperties liquibaseProperties,
                                        ResourceLoader resourceLoader,
                                        TenantRepository tenantRepo,
-                                       @Value("${multitenancy.master.datasource.url}") String urlPrefix,
+                                       @Value("${databaseName:}") String databaseName,
+                                       @Value("${multitenancy.tenant.datasource.url-prefix}") String urlPrefix,
                                        @Value("${multitenancy.tenant.liquibase.changeLog}") String liquibaseChangeLog,
                                        @Value("${multitenancy.tenant.liquibase.contexts:#{null}") String liquibaseContexts,
                                        @Value("${encryption.secret}") String secret,
@@ -54,6 +59,7 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         this.liquibaseProperties = liquibaseProperties;
         this.resourceLoader = resourceLoader;
         this.tenantRepo = tenantRepo;
+        this.databaseName = databaseName;
         this.urlPrefix = urlPrefix;
         this.liquibaseChangeLog = liquibaseChangeLog;
         this.liquibaseContexts = liquibaseContexts;
@@ -71,8 +77,16 @@ public class TenantManagementServiceImpl implements TenantManagementService {
             throw new TenantCreationException("Invalid schema name: " + schema);
         }
 
-        String url = urlPrefix+"?currentSchema="+schema;
+        String url = urlPrefix+databaseName+"?currentSchema="+schema;
         String encryptedPassword = encryptionService.encrypt(password, secret, salt);
+        try {
+            createSchema(schema, password);
+            runLiquibase(dataSource, schema);
+        } catch (DataAccessException e) {
+              throw new TenantCreationException("Error when creating schema: " + schema, e);
+        } catch (LiquibaseException e) {
+            throw new TenantCreationException("Error when populating schema: ", e);
+        }
         Tenant tenant = Tenant.builder()
                 .tenantId(tenantId)
                 .schema(schema)
@@ -80,6 +94,15 @@ public class TenantManagementServiceImpl implements TenantManagementService {
                 .password(encryptedPassword)
                 .build();
         tenantRepo.save(tenant);
+    }
+
+    private void createSchema(String schema, String password) {
+        jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt.execute("CREATE USER " + schema+ " WITH ENCRYPTED PASSWORD '" + password + "'"));
+        jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt.execute("GRANT CONNECT ON DATABASE " + databaseName + " TO " + schema));
+        jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt.execute("CREATE SCHEMA " + schema + " AUTHORIZATION " + schema));
+        jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA " + schema + " GRANT ALL PRIVILEGES ON TABLES TO " + schema));
+        jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA " + schema + " GRANT USAGE ON SEQUENCES TO " + schema));
+        jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA " + schema + " GRANT EXECUTE ON FUNCTIONS TO " + schema));
     }
 
     private void runLiquibase(DataSource dataSource, String schema) throws LiquibaseException {

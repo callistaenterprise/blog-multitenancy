@@ -5,10 +5,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
     hibernate:
       ddl-auto: none
     open-in-view: false
 multitenancy:
+  schema-cache:
+    maximumSize: 100
+    expireAfterAccess: 10
   master:
     datasource:
       url: jdbc:postgresql://localhost:5432/blog

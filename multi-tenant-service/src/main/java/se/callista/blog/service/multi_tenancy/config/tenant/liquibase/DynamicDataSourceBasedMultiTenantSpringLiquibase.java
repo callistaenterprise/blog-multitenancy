@@ -60,7 +60,7 @@ public class DynamicDataSourceBasedMultiTenantSpringLiquibase implements Initial
             String decryptedPassword = encryptionService.decrypt(tenant.getPassword(), secret, salt);
             try (Connection connection = DriverManager.getConnection(tenant.getUrl(), tenant.getSchema(), decryptedPassword)) {
                 DataSource tenantDataSource = new SingleConnectionDataSource(connection, false);
-                SpringLiquibase liquibase = this.getSpringLiquibase(tenantDataSource, null);
+                SpringLiquibase liquibase = this.getSpringLiquibase(tenantDataSource, tenant.getSchema());
                 liquibase.afterPropertiesSet();
             } catch (SQLException | LiquibaseException e) {
                 e.printStackTrace();

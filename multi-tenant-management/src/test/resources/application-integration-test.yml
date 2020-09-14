@@ -1,3 +1,4 @@
+databaseName: ${DB_NAME}
 spring:
   main:
     lazy-initialization: true
