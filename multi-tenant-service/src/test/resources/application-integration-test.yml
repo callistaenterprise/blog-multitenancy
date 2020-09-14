@@ -2,9 +2,7 @@ spring:
   main:
     lazy-initialization: true
     banner-mode: "off"
-multitenancy:
-  master:
-    datasource:
-      url: ${DB_URL}
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}

@@ -1,6 +1,7 @@
 package se.callista.blog.service.repository;
 
 import com.github.database.rider.core.api.dataset.DataSet;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.junit.jupiter.Container;

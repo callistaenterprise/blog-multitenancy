@@ -3,6 +3,9 @@ package se.callista.blog.service.multi_tenancy.domain.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import se.callista.blog.service.multi_tenancy.listener.TenantListener;
 
 import javax.persistence.Column;
@@ -15,6 +18,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@FilterDef(name = "tenantFilter", parameters = {@ParamDef(name = "tenantId", type = "string")})
+@Filter(name = "tenantFilter", condition = "tenant_id = :tenantId")
 @EntityListeners(TenantListener.class)
 public abstract class AbstractBaseEntity implements TenantAware, Serializable {
     private static final long serialVersionUID = 1L;

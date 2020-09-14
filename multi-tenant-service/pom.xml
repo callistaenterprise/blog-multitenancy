@@ -33,9 +33,8 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>29.0-jre</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -47,12 +46,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- spring-boot-devtools disabled, since it doesn't work with AspectJ LoadTimeWeaving
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -111,6 +112,41 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <agents>
+                        <agent>${project.build.directory}/spring-instrument-${spring-framework.version}.jar</agent>
+                        <agent>${project.build.directory}/aspectjweaver-${aspectj.version}.jar</agent>
+                    </agents>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-instrument</artifactId>
+                            <version>${spring-framework.version}</version>
+                        </artifactItem>
+                        <artifactItem>
+                            <groupId>org.aspectj</groupId>
+                            <artifactId>aspectjweaver</artifactId>
+                            <version>${aspectj.version}</version>
+                        </artifactItem>
+                    </artifactItems>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -132,6 +168,10 @@
                         <include>**/*.class</include>
                     </includes>
                     <groups>integration</groups>
+                    <argLine>
+                        -javaagent:"${project.build.directory}"/spring-instrument-${spring-framework.version}.jar
+                        -javaagent:"${project.build.directory}"/aspectjweaver-${aspectj.version}.jar
+                    </argLine>
                 </configuration>
             </plugin>
         </plugins>
