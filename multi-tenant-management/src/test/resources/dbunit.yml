@@ -1,4 +1,6 @@
 properties:
+  schema: public
   caseSensitiveTableNames: true
+  qualifiedTableNames: true
   datatypeFactory: !!org.dbunit.ext.postgresql.PostgresqlDataTypeFactory {}
-  replacers: [!!se.callista.blog.service.dbunit.DbUrlReplacer {}]
+  replacers: [!!se.callista.blog.tenant_management.dbunit.DbUrlReplacer {}]

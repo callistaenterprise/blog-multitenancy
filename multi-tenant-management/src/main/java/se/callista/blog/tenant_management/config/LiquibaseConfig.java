@@ -1,4 +1,4 @@
-package se.callista.blog.service.config;
+package se.callista.blog.tenant_management.config;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.ObjectProvider;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
-@Profile("!test")
 @Lazy(false)
 @Configuration
 @EnableConfigurationProperties(LiquibaseProperties.class)

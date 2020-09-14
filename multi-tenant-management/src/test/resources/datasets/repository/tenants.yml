@@ -1,0 +1,4 @@
+public.tenant:
+  - tenant_id: tenant1
+    schema: tenant1_schema
+    url: "${DB_URL}?currentSchema=tenant1_schema"

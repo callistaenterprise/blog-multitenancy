@@ -21,7 +21,6 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
 public class Product {
 
     @Builder
