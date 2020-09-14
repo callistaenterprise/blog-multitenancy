@@ -28,3 +28,16 @@ databaseChangeLog:
             type: VARCHAR(255)
             constraints:
               nullable: false
+
+- changeSet:
+    id: product_tenant_id
+    author: bjobes
+    changes:
+    - addColumn:
+        tableName: product
+        columns:
+        - column:
+            name: tenant_id
+            type: VARCHAR(30)
+            constraints:
+              nullable: false

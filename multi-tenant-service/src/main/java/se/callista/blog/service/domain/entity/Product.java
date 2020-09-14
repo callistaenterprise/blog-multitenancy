@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import se.callista.blog.service.multi_tenancy.domain.entity.AbstractBaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,11 +22,11 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
-public class Product {
+public class Product extends AbstractBaseEntity {
 
     @Builder
-    public Product(Long id, String name, Integer version) {
+    public Product(Long id, String name, Integer version, String tenantId) {
+        super(tenantId);
         this.id = id;
         this.name = name;
         this.version = version;
