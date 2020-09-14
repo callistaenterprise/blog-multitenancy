@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+multitenancy:
+  master:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/blog
+      username: postgres
+      password: secret
+    liquibase:
+      enabled: true
+      changeLog: classpath:db/changelog/db.changelog-tenant.yaml
