@@ -14,7 +14,7 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
 
     @Autowired
     public CurrentTenantIdentifierResolverImpl(
-            @Value("${multitenancy.master.schema}") String defaultTenant) {
+            @Value("${multitenancy.master.schema:#{null}}") String defaultTenant) {
         this.defaultTenant = defaultTenant;
     }
 

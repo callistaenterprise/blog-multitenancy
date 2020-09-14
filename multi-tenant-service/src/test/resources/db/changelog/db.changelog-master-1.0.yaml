@@ -19,3 +19,6 @@ databaseChangeLog:
         - column:
             name: url
             type: VARCHAR(256)
+        - column:
+            name: password
+            type: VARCHAR(30)

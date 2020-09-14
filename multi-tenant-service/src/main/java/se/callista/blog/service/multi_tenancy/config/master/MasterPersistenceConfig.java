@@ -40,7 +40,7 @@ public class MasterPersistenceConfig {
 
     @Bean(name = "masterEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean masterEntityManagerFactory(
-            DataSource dataSource) {
+            @Qualifier("masterDataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
         em.setPersistenceUnitName("master-persistence-unit");

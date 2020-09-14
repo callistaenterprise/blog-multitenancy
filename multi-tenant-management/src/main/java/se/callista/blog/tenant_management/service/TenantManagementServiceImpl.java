@@ -21,6 +21,7 @@ import javax.sql.DataSource;
 @EnableConfigurationProperties(LiquibaseProperties.class)
 public class TenantManagementServiceImpl implements TenantManagementService {
 
+    private final EncryptionService encryptionService;
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
     private final LiquibaseProperties liquibaseProperties;
@@ -30,9 +31,12 @@ public class TenantManagementServiceImpl implements TenantManagementService {
     private final String urlPrefix;
     private final String liquibaseChangeLog;
     private final String liquibaseContexts;
+    private final String secret;
+    private final String salt;
 
     @Autowired
-    public TenantManagementServiceImpl(DataSource dataSource,
+    public TenantManagementServiceImpl(EncryptionService encryptionService,
+                                       DataSource dataSource,
                                        JdbcTemplate jdbcTemplate,
                                        @Qualifier("masterLiquibaseProperties")
                                        LiquibaseProperties liquibaseProperties,
@@ -40,8 +44,11 @@ public class TenantManagementServiceImpl implements TenantManagementService {
                                        TenantRepository tenantRepo,
                                        @Value("${multitenancy.master.datasource.url}") String urlPrefix,
                                        @Value("${multitenancy.tenant.liquibase.changeLog}") String liquibaseChangeLog,
-                                       @Value("${multitenancy.tenant.liquibase.contexts:}") String liquibaseContexts
+                                       @Value("${multitenancy.tenant.liquibase.contexts:#{null}") String liquibaseContexts,
+                                       @Value("${encryption.secret}") String secret,
+                                       @Value("${encryption.salt}") String salt
     ) {
+        this.encryptionService = encryptionService;
         this.dataSource = dataSource;
         this.jdbcTemplate = jdbcTemplate;
         this.liquibaseProperties = liquibaseProperties;
@@ -50,12 +57,14 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         this.urlPrefix = urlPrefix;
         this.liquibaseChangeLog = liquibaseChangeLog;
         this.liquibaseContexts = liquibaseContexts;
+        this.secret = secret;
+        this.salt = salt;
     }
 
     private static final String VALID_SCHEMA_NAME_REGEXP = "[A-Za-z0-9_]*";
 
     @Override
-    public void createTenant(String tenantId, String schema) {
+    public void createTenant(String tenantId, String schema, String password) {
 
         // Verify schema string to prevent SQL injection
         if (!schema.matches(VALID_SCHEMA_NAME_REGEXP)) {
@@ -63,10 +72,12 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         }
 
         String url = urlPrefix+"?currentSchema="+schema;
+        String encryptedPassword = encryptionService.encrypt(password, secret, salt);
         Tenant tenant = Tenant.builder()
                 .tenantId(tenantId)
                 .schema(schema)
                 .url(url)
+                .password(encryptedPassword)
                 .build();
         tenantRepo.save(tenant);
     }

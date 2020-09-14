@@ -21,3 +21,6 @@ multitenancy:
       url-prefix: jdbc:postgresql://localhost:5432/blog
     liquibase:
       changeLog: classpath:db/changelog/db.changelog-tenant.yaml
+encryption:
+  secret: verySecret
+  salt: jozo

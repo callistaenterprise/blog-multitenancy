@@ -30,4 +30,8 @@ public class Tenant {
     @Column(name = "url")
     private String url;
 
+    @Size(max = 30)
+    @Column(name = "password")
+    private String password;
+
 }

@@ -2,3 +2,4 @@ public.tenant:
   - tenant_id: tenant1
     schema: tenant1_schema
     url: "regex:^jdbc:postgresql:.*currentSchema=tenant1_schema$"
+    password: "3BlOEJXzLxpOMKmKU82TVQ=="

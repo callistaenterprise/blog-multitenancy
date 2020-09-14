@@ -25,9 +25,9 @@ class TenantsApiControllerTest {
 
     @Test
     void createTenant() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/tenants?tenantId=tenant1&schema=tenant1_schema"))
+        mvc.perform(MockMvcRequestBuilders.post("/tenants?tenantId=tenant1&schema=tenant1_schema&password=secret"))
                 .andExpect(status().isOk());
 
-        verify(tenantManagementService).createTenant("tenant1", "tenant1_schema");
+        verify(tenantManagementService).createTenant("tenant1", "tenant1_schema", "secret");
     }
 }
