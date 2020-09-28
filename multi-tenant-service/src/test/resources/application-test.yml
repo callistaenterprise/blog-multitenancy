@@ -2,3 +2,5 @@ spring:
   main:
     lazy-initialization: true
     banner-mode: "off"
+  liquibase:
+    enabled: false

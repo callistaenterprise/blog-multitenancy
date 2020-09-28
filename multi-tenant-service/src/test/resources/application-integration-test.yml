@@ -2,6 +2,10 @@ spring:
   main:
     lazy-initialization: true
     banner-mode: "off"
+  liquibase:
+    enabled: true
+    parameters:
+      database: ${DB_NAME}
 multitenancy:
   master:
     datasource:

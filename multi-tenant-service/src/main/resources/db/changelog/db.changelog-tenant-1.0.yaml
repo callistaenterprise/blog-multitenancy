@@ -1,6 +1,20 @@
 databaseChangeLog:
 
 - changeSet:
+    id: app_user
+    author: bjobes
+    changes:
+    -  sql:
+        dbms: 'postgresql'
+        sql: >-
+            CREATE USER ${username} WITH PASSWORD '${password}';
+            GRANT CONNECT ON DATABASE ${database} TO app_user;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT SELECT, INSERT, UPDATE, DELETE, REFERENCES
+                ON TABLES TO ${username};
+            ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT USAGE ON SEQUENCES TO ${username};
+            ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT EXECUTE ON FUNCTIONS TO ${username};
+
+- changeSet:
     id: product
     author: bjobes
     changes:
@@ -41,3 +55,15 @@ databaseChangeLog:
             type: VARCHAR(30)
             constraints:
               nullable: false
+
+- changeSet:
+    id: product_row_level_security
+    author: bjobes
+    changes:
+    -  sql:
+        dbms: 'postgresql'
+        sql: >-
+            ALTER TABLE product ENABLE ROW LEVEL SECURITY;
+            DROP POLICY IF EXISTS product_tenant_isolation_policy ON product;
+            CREATE POLICY product_tenant_isolation_policy ON product
+                USING (tenant_id = current_setting('app.tenant_id')::VARCHAR);
