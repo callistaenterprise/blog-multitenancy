@@ -22,17 +22,11 @@ different Multi-tenancy strategy examples are in separate branches.
 
 The `database` branch implements the *Database per tenant* strategy.
 
-### Schema per tenant, with separate database credentials
-
-The `schema_datasource` branch implements the *Schema per tenant* strategy,
-but with a separate database user for each schema for additional separation
-between the schemas.
-
 ### Schema per tenant
 
 The `schema` branch implements the *Schema per tenant* strategy.
 
-### Shared Database with Discriminator, using Hibernate's experimental support
+### Shared Database with Discriminator, using Hibernate Filters
 
 The `shared_database_hibernate` branch implements the *Shared Database with Discriminator*
 strategy, using Hibernate's experimental support for discriminator-based multi-tenancy
