@@ -7,8 +7,9 @@ SAAS solutions. Spring Data and Hibernate provide out-of-the-box support
 for different Multi-tenancy strategies. Configuration however becomes more
 complicated, and the available examples are few.
 
-This project complements my blog series on Multi Tenancy, and contains
-working examples of different Multi Tenant strategies implemented with
+This project complements my blog series on Multi Tenancy
+(see https://callistaenterprise.se/blogg/teknik/2020/09/19/multi-tenancy-with-spring-boot-part1/),
+and contains working examples of different Multi Tenant strategies implemented with
 Spring Boot, Hibemate and Liquibase, complete with support for database
 migrations as well as dynamically set up new tenants on the fly.
 
