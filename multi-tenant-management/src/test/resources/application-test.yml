@@ -1,0 +1,8 @@
+spring:
+  main:
+    lazy-initialization: true
+    banner-mode: "off"
+multitenancy:
+  master:
+    liquibase:
+      enabled: false

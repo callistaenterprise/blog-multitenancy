@@ -1,0 +1,18 @@
+spring:
+  main:
+    lazy-initialization: true
+    banner-mode: "off"
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+multitenancy:
+  master:
+    schema: public
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-master.yaml
+  tenant:
+    datasource:
+      url-prefix: ${DB_URL}
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-tenant.yaml
