@@ -6,13 +6,19 @@ databaseChangeLog:
     changes:
     -  sql:
         dbms: 'postgresql'
-        sql: >-
-            CREATE USER ${username} WITH PASSWORD '${password}';
-            GRANT CONNECT ON DATABASE ${database} TO app_user;
+        sql: >
+            DO '
+            BEGIN
+              CREATE ROLE ${app_db_user} LOGIN PASSWORD ''${app_db_password}'';
+              EXCEPTION WHEN DUPLICATE_OBJECT THEN
+              RAISE NOTICE ''not creating role ${app_db_user} -- it already exists'';
+            END
+            ';
+            GRANT CONNECT ON DATABASE ${database} TO ${app_db_user};
             ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT SELECT, INSERT, UPDATE, DELETE, REFERENCES
-                ON TABLES TO ${username};
-            ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT USAGE ON SEQUENCES TO ${username};
-            ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT EXECUTE ON FUNCTIONS TO ${username};
+                ON TABLES TO ${app_db_user};
+            ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT USAGE ON SEQUENCES TO ${app_db_user};
+            ALTER DEFAULT PRIVILEGES IN SCHEMA ${schema} GRANT EXECUTE ON FUNCTIONS TO ${app_db_user};
 
 - changeSet:
     id: product

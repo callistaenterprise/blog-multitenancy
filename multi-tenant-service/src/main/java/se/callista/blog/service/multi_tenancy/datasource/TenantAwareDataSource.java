@@ -1,17 +1,16 @@
 package se.callista.blog.service.multi_tenancy.datasource;
 
-import org.springframework.jdbc.datasource.ConnectionProxy;
-import org.springframework.jdbc.datasource.DelegatingDataSource;
-import org.springframework.lang.Nullable;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
-
-import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.sql.DataSource;
+import org.springframework.jdbc.datasource.ConnectionProxy;
+import org.springframework.jdbc.datasource.DelegatingDataSource;
+import org.springframework.lang.Nullable;
+import se.callista.blog.service.multi_tenancy.util.TenantContext;
 
 /**
  * Tenant-Aware Datasource that decorates Connections with
@@ -76,13 +75,13 @@ public class TenantAwareDataSource extends DelegatingDataSource {
                 case "toString":
                     return "Tenant-aware proxy for target Connection [" + this.target.toString() + "]";
                 case "unwrap":
-                    if (((Class) args[0]).isInstance(proxy)) {
+                    if (((Class<?>) args[0]).isInstance(proxy)) {
                         return proxy;
                     } else {
                         return method.invoke(target, args);
                     }
                 case "isWrapperFor":
-                    if (((Class) args[0]).isInstance(proxy)) {
+                    if (((Class<?>) args[0]).isInstance(proxy)) {
                         return true;
                     } else {
                         return method.invoke(target, args);

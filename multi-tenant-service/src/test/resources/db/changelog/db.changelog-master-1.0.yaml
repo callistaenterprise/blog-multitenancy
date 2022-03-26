@@ -1,0 +1,46 @@
+databaseChangeLog:
+
+- changeSet:
+    id: shard-1
+    author: bjobes
+    changes:
+    - createTable:
+        tableName: shard
+        columns:
+        - column:
+            name: id
+            type: BIGINT
+            constraints:
+              primaryKey: true
+              primaryKeyName: shard_pkey
+        - column:
+            name: db
+            type: VARCHAR(30)
+        - column:
+            name: url
+            type: VARCHAR(256)
+        - column:
+            name: no_of_tenants
+            type: BIGINT
+
+- changeSet:
+    id: tenant-1
+    author: bjobes
+    changes:
+    - createTable:
+        tableName: tenant
+        columns:
+        - column:
+            name: tenant_id
+            type: VARCHAR(30)
+            constraints:
+              primaryKey: true
+              primaryKeyName: tenant_pkey
+        - column:
+            name: shard_id
+            type: BIGINT
+            constraints:
+              nullable: false
+              foreignKeyName: tenant_shard_fk
+              referencedTableName: shard
+              referencedColumnNames: id

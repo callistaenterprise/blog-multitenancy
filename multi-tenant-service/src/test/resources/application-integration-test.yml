@@ -2,13 +2,22 @@ spring:
   main:
     lazy-initialization: true
     banner-mode: "off"
-  liquibase:
-    enabled: true
-    parameters:
-      database: ${DB_NAME}
 multitenancy:
   master:
     datasource:
       url: ${DB_URL}
       username: ${DB_USERNAME}
       password: ${DB_PASSWORD}
+      hikari:
+        maximum-pool-size: 2
+    liquibase:
+      enabled: true
+      changeLog: classpath:db/changelog/db.changelog-master.yaml  
+  shard:
+    datasource:
+      url-prefix: ${DB_URL}
+    liquibase:
+      enabled: true
+      parameters:
+        database: ${DB_NAME}
+      

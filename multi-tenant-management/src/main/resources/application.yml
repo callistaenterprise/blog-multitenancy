@@ -1,0 +1,32 @@
+server:
+  port: 8088
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+multitenancy:
+  master:
+    database: blog
+    datasource:
+      url: jdbc:postgresql://localhost:5432/blog
+      username: postgres
+      password: secret
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-master.yaml  
+  shard:
+    max-tenants: 2
+    datasource:
+      url-prefix: jdbc:postgresql://localhost:5432/
+    liquibase:
+      enabled: true
+      changeLog: classpath:db/changelog/db.changelog-shard.yaml
+      parameters:
+        schema: ${spring.jpa.properties.hibernate.default_schema}
+        database: ${multitenancy.master.database}
+        app_db_user: app_user
+        app_db_password: secret

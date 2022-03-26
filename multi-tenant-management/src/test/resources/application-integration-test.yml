@@ -1,0 +1,21 @@
+spring:
+  main:
+    lazy-initialization: true
+    banner-mode: "off"
+multitenancy:
+  master:
+    database: ${DB_NAME}
+    datasource:
+      url: ${DB_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-master.yaml
+  shard:
+    datasource:
+      url-prefix: jdbc:postgresql://${DB_HOST}/
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-shard.yaml
+logging.level.org.hibernate:
+  SQL: DEBUG
+  type.descriptor.sql.BasicBinder: TRACE

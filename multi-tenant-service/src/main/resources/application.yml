@@ -5,27 +5,39 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
     hibernate:
       ddl-auto: none
     open-in-view: false
-  liquibase:
-    enabled: true
-    changeLog: classpath:db/changelog/db.changelog-tenant.yaml
-    parameters:
-      database: blog
-      schema: public
-      username: app_user
-      password: secret
 multitenancy:
   master:
+    database: blog
     datasource:
       url: jdbc:postgresql://localhost:5432/blog
       username: postgres
       password: secret
       hikari:
         maximum-pool-size: 1
+    repository:
+      packages: se.callista.blog.service.multi_tenancy.repository
+    entityManager:
+      packages: se.callista.blog.service.multi_tenancy.domain
+    liquibase:
+      enabled: false
   tenant:
     datasource:
-      url: ${multitenancy.master.datasource.url}
       username: app_user
       password: secret
+    repository:
+      packages: se.callista.blog.service.repository
+    entityManager:
+      packages: se.callista.blog.service.domain
+  shard:
+    liquibase:
+      enabled: true
+      changeLog: classpath:db/changelog/db.changelog-shard.yaml
+      parameters:
+        schema: ${spring.jpa.properties.hibernate.default_schema}
+        database: ${multitenancy.master.database}
+        app_db_user: ${multitenancy.tenant.datasource.username}
+        app_db_password: ${multitenancy.tenant.datasource.password}

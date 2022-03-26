@@ -42,6 +42,11 @@ strategy, using Hibernate's experimental support for discriminator-based multi-t
 The `shared_database_postgres_rls` branch implements the *Shared Database with Discriminator*
 strategy, using PostgreSQL's Row Level Security.
 
+### Sharded, shared Database with Discriminator, using PostgreSQL's Row Level Security
+
+The `sharded_shared_database_postgres_rls` branch combines the *Shared Database with Discriminator*
+strategy (using PostgreSQL's Row Level Security) with a *Database per Group of Tenants* (Shard) strategy.
+
 ## How to start a Dockerized postgres database
 
 All the examples require a postgres database running at localhost:5432. Run the following command 
@@ -57,4 +62,3 @@ Close it down with the following command when done, or if you need to recreate t
 ```
 docker-compose down
 ```
-
