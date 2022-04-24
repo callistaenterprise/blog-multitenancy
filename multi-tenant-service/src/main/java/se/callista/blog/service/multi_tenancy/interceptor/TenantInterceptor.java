@@ -13,6 +13,7 @@ import se.callista.blog.service.multi_tenancy.util.TenantContext;
 @Component
 public class TenantInterceptor implements WebRequestInterceptor {
 
+    public static final String X_TENANT_ID = "X-TENANT-ID";
     private final String defaultTenant;
 
     @Autowired
@@ -24,8 +25,8 @@ public class TenantInterceptor implements WebRequestInterceptor {
     @Override
     public void preHandle(WebRequest request) {
         String tenantId;
-        if (request.getHeader("X-TENANT-ID") != null) {
-            tenantId = request.getHeader("X-TENANT-ID");
+        if (request.getHeader(X_TENANT_ID) != null) {
+            tenantId = request.getHeader(X_TENANT_ID);
         } else if (this.defaultTenant != null) {
             tenantId = this.defaultTenant;
         } else {

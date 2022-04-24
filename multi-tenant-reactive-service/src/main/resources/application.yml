@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/blog
+    username: postgres
+    password: secret
+    hikari:
+      maximum-pool-size: 1
+  r2dbc:
+    url: r2dbc:pool:postgres://localhost:5432
+    username: app_user
+    password: secret
+    name: blog
+  liquibase:
+    enabled: true
+    changeLog: classpath:db/changelog/db.changelog-tenant.yaml
+    parameters:
+      database: blog
+      schema: public
+      username: app_user
+      password: secret

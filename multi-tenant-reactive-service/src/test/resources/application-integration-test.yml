@@ -1,0 +1,15 @@
+spring:
+  main:
+    lazy-initialization: true
+    banner-mode: "off"
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  r2dbc:
+    url: r2dbc:pool:postgres://${DB_HOST}
+    name: ${DB_NAME}
+  liquibase:
+    enabled: true
+    parameters:
+      database: ${DB_NAME}

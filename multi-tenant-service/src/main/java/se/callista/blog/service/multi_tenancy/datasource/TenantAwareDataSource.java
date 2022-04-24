@@ -1,17 +1,16 @@
 package se.callista.blog.service.multi_tenancy.datasource;
 
-import org.springframework.jdbc.datasource.ConnectionProxy;
-import org.springframework.jdbc.datasource.DelegatingDataSource;
-import org.springframework.lang.Nullable;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
-
-import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.sql.DataSource;
+import org.springframework.jdbc.datasource.ConnectionProxy;
+import org.springframework.jdbc.datasource.DelegatingDataSource;
+import org.springframework.lang.Nullable;
+import se.callista.blog.service.multi_tenancy.util.TenantContext;
 
 /**
  * Tenant-Aware Datasource that decorates Connections with

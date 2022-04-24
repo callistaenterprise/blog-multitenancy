@@ -1,0 +1,7 @@
+product:
+  - id: 1
+    name: Product 1
+    tenant_id: tenant1
+  - id: 2
+    name: Product 2
+    tenant_id: tenant2
