@@ -1,0 +1,21 @@
+server:
+  port: 8080
+multitenancy:
+  connectionfactory-cache:
+    maximumSize: 100
+    expireAfterAccess: 10
+  master:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/blog
+      username: postgres
+      password: secret
+  tenant:
+    datasource:
+      url-prefix: jdbc:postgresql://localhost:5432/
+    r2dbc:
+      url-prefix: r2dbc:pool:postgres://localhost:5432/
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-tenant.yaml
+encryption:
+  secret: verySecret
+  salt: jozo

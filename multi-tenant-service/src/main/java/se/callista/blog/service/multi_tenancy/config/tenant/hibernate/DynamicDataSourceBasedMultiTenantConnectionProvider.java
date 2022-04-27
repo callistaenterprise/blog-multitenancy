@@ -1,10 +1,12 @@
 package se.callista.blog.service.multi_tenancy.config.tenant.hibernate;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.cache.RemovalListener;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.github.benmanes.caffeine.cache.RemovalListener;
 import com.zaxxer.hikari.HikariDataSource;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.engine.jdbc.connections.spi.AbstractDataSourceBasedMultiTenantConnectionProviderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,6 @@ import org.springframework.stereotype.Component;
 import se.callista.blog.service.multi_tenancy.domain.entity.Tenant;
 import se.callista.blog.service.multi_tenancy.repository.TenantRepository;
 import se.callista.blog.service.util.EncryptionService;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -44,6 +41,9 @@ public class DynamicDataSourceBasedMultiTenantConnectionProvider
     @Autowired
     private TenantRepository masterTenantRepository;
 
+    @Value("${multitenancy.tenant.datasource.url-prefix}")
+    private String urlPrefix;
+
     @Value("${multitenancy.datasource-cache.maximumSize:100}")
     private Long maximumSize;
 
@@ -60,21 +60,20 @@ public class DynamicDataSourceBasedMultiTenantConnectionProvider
 
     @PostConstruct
     private void createCache() {
-        tenantDataSources = CacheBuilder.newBuilder()
+        tenantDataSources = Caffeine.newBuilder()
                 .maximumSize(maximumSize)
                 .expireAfterAccess(expireAfterAccess, TimeUnit.MINUTES)
-                .removalListener((RemovalListener<String, DataSource>) removal -> {
-                    HikariDataSource ds = (HikariDataSource) removal.getValue();
+                .removalListener((RemovalListener<String, DataSource>) (tenantId, dataSource, removalCause) -> {
+                    HikariDataSource ds = (HikariDataSource) dataSource;
                     ds.close(); // tear down properly
                     log.info("Closed datasource: {}", ds.getPoolName());
                 })
-                .build(new CacheLoader<String, DataSource>() {
-                    public DataSource load(String key) {
+                .build(key -> {
                         Tenant tenant = masterTenantRepository.findByTenantId(key)
                                 .orElseThrow(() -> new RuntimeException("No such tenant: " + key));
                         return createAndConfigureDataSource(tenant);
                     }
-                });
+                );
     }
 
     @Override
@@ -84,11 +83,7 @@ public class DynamicDataSourceBasedMultiTenantConnectionProvider
 
     @Override
     protected DataSource selectDataSource(String tenantIdentifier) {
-        try {
-            return tenantDataSources.get(tenantIdentifier);
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Failed to load DataSource for tenant: " + tenantIdentifier);
-        }
+        return tenantDataSources.get(tenantIdentifier);
     }
 
     private DataSource createAndConfigureDataSource(Tenant tenant) {
@@ -98,7 +93,7 @@ public class DynamicDataSourceBasedMultiTenantConnectionProvider
 
         ds.setUsername(tenant.getDb());
         ds.setPassword(decryptedPassword);
-        ds.setJdbcUrl(tenant.getUrl());
+        ds.setJdbcUrl(urlPrefix + tenant.getDb());
 
         ds.setPoolName(tenant.getTenantId() + TENANT_POOL_NAME_SUFFIX);
 

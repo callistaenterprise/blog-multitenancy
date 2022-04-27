@@ -1,9 +1,8 @@
 package se.callista.blog.tenant_management.dbunit;
 
 import com.github.database.rider.core.replacers.Replacer;
-import org.dbunit.dataset.ReplacementDataSet;
-
 import java.util.Objects;
+import org.dbunit.dataset.ReplacementDataSet;
 
 public class DbUrlReplacer implements Replacer {
 

@@ -1,6 +1,10 @@
 package se.callista.blog.tenant_management.service;
 
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.sql.DataSource;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +14,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.callista.blog.tenant_management.annotation.SpringBootDbIntegrationTest;
 import se.callista.blog.tenant_management.persistence.PostgresqlTestContainer;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 @Testcontainers
 @SpringBootDbIntegrationTest

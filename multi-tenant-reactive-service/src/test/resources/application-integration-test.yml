@@ -1,0 +1,18 @@
+spring:
+  main:
+    lazy-initialization: true
+    banner-mode: "off"
+multitenancy:
+  master:
+    datasource:
+      url: ${DB_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-master-tenant.yaml
+      enabled: true
+  tenant:
+    datasource:
+      url-prefix: jdbc:postgresql://${DB_HOST}/
+    r2dbc:
+      url-prefix: r2dbc:pool:postgres://${DB_HOST}/

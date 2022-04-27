@@ -1,5 +1,9 @@
 package se.callista.blog.tenant_management.service;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import javax.sql.DataSource;
 import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +20,6 @@ import org.springframework.stereotype.Service;
 import se.callista.blog.tenant_management.domain.entity.Tenant;
 import se.callista.blog.tenant_management.repository.TenantRepository;
 import se.callista.blog.tenant_management.util.EncryptionService;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 @Service
 @EnableConfigurationProperties(LiquibaseProperties.class)
@@ -89,7 +88,6 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         Tenant tenant = Tenant.builder()
                 .tenantId(tenantId)
                 .db(db)
-                .url(url)
                 .password(encryptedPassword)
                 .build();
         tenantRepository.save(tenant);

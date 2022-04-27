@@ -1,16 +1,15 @@
 package se.callista.blog.service.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import se.callista.blog.service.domain.entity.Product;
 import se.callista.blog.service.model.ProductValue;
 import se.callista.blog.service.repository.ProductRepository;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Component
 public class ProductServiceImpl implements ProductService {

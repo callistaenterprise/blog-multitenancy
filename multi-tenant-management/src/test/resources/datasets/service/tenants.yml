@@ -2,4 +2,3 @@ tenant:
   - tenant_id: tenant1
     db: tenant1_db
     password: "3BlOEJXzLxpOMKmKU82TVQ=="
-    url: "regex:^jdbc:postgresql:.*/tenant1_db$"

@@ -1,14 +1,13 @@
 package se.callista.blog.service.multi_tenancy.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -29,9 +28,5 @@ public class Tenant {
     @Size(max = 30)
     @Column(name = "password")
     private String password;
-
-    @Size(max = 256)
-    @Column(name = "url")
-    private String url;
 
 }

@@ -13,6 +13,4 @@ multitenancy:
       enabled: true
   tenant:
     datasource:
-      url-prefix: ${DB_URL}
-    liquibase:
-      changeLog: classpath:db/changelog/db.changelog-tenant.yaml
+      url-prefix: jdbc:postgresql://${DB_HOST}/

@@ -29,6 +29,7 @@ multitenancy:
     entityManager:
       packages: se.callista.blog.service.domain
     datasource:
+      url-prefix: jdbc:postgresql://localhost:5432/
       hikari:
         maximumPoolSize: 2
         minimumIdle: 0
