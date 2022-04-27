@@ -1,4 +1,0 @@
-properties:
-  caseSensitiveTableNames: true
-  qualifiedTableNames: true
-  datatypeFactory: !!org.dbunit.ext.postgresql.PostgresqlDataTypeFactory {}

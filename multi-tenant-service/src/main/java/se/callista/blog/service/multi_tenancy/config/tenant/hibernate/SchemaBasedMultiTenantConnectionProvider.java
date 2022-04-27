@@ -1,8 +1,12 @@
 package se.callista.blog.service.multi_tenancy.config.tenant.hibernate;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.hibernate.service.UnknownUnwrapTypeException;
@@ -11,13 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import se.callista.blog.service.multi_tenancy.domain.entity.Tenant;
 import se.callista.blog.service.multi_tenancy.repository.TenantRepository;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -29,20 +26,23 @@ public class SchemaBasedMultiTenantConnectionProvider implements MultiTenantConn
     private final Long maximumSize;
     private final Integer expireAfterAccess;
 
-    private transient LoadingCache<String, String> tenantSchemas;
+    private LoadingCache<String, String> tenantSchemas;
 
     @PostConstruct
     private void createCache() {
-        tenantSchemas = CacheBuilder.newBuilder()
-                .maximumSize(maximumSize)
-                .expireAfterAccess(expireAfterAccess, TimeUnit.MINUTES)
-                .build(new CacheLoader<String, String>() {
-                    public String load(String key) {
-                        Tenant tenant = tenantRepository.findByTenantId(key)
-                                .orElseThrow(() -> new RuntimeException("No such tenant: " + key));
-                        return tenant.getSchema();
-                    }
-                });
+        Caffeine<Object, Object> tenantsCacheBuilder = Caffeine.newBuilder();
+        if (maximumSize != null) {
+            tenantsCacheBuilder.maximumSize(maximumSize);
+        }
+        if (expireAfterAccess != null) {
+            tenantsCacheBuilder.expireAfterAccess(expireAfterAccess, TimeUnit.MINUTES);
+        }
+        tenantSchemas = tenantsCacheBuilder.build(
+            tenantId -> {
+                Tenant tenant = tenantRepository.findByTenantId(tenantId)
+                    .orElseThrow(() -> new RuntimeException("No such tenant: " + tenantId));
+                return tenant.getSchema();
+            });
     }
 
     @Autowired
@@ -76,11 +76,7 @@ public class SchemaBasedMultiTenantConnectionProvider implements MultiTenantConn
     public Connection getConnection(String tenantIdentifier) throws SQLException {
         log.info("Get connection for tenant {}", tenantIdentifier);
         String tenantSchema;
-        try {
-            tenantSchema = tenantSchemas.get(tenantIdentifier);
-        } catch (ExecutionException e) {
-            throw new RuntimeException("No such tenant: " + tenantIdentifier);
-        }
+        tenantSchema = tenantSchemas.get(tenantIdentifier);
         final Connection connection = getAnyConnection();
         connection.setSchema(tenantSchema);
         return connection;

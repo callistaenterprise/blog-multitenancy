@@ -1,0 +1,19 @@
+server:
+  port: 8080
+multitenancy:
+  schema-cache:
+    maximumSize: 100
+    expireAfterAccess: 10
+  master:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/blog
+      username: postgres
+      password: secret
+  tenant:
+    r2dbc:
+      url: r2dbc:pool:postgres://localhost:5432
+      username: postgres
+      password: secret
+      name: blog
+    liquibase:
+      changeLog: classpath:db/changelog/db.changelog-tenant.yaml

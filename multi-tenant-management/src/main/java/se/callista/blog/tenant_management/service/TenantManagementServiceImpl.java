@@ -1,5 +1,7 @@
 package se.callista.blog.tenant_management.service;
 
+import java.util.Collections;
+import javax.sql.DataSource;
 import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,6 @@ import org.springframework.jdbc.core.StatementCallback;
 import org.springframework.stereotype.Service;
 import se.callista.blog.tenant_management.domain.entity.Tenant;
 import se.callista.blog.tenant_management.repository.TenantRepository;
-
-import javax.sql.DataSource;
 
 @Service
 public class TenantManagementServiceImpl implements TenantManagementService {
@@ -77,6 +77,12 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         liquibase.setResourceLoader(resourceLoader);
         liquibase.setDataSource(dataSource);
         liquibase.setDefaultSchema(schema);
+        if (liquibaseProperties.getParameters() != null) {
+            liquibaseProperties.getParameters().put("schema", schema);
+            liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
+        } else {
+            liquibase.setChangeLogParameters(Collections.singletonMap("schema", schema));
+        }
         liquibase.setChangeLog(liquibaseProperties.getChangeLog());
         liquibase.setContexts(liquibaseProperties.getContexts());
         liquibase.setLiquibaseSchema(liquibaseProperties.getLiquibaseSchema());
@@ -86,7 +92,6 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
         liquibase.setShouldRun(liquibaseProperties.isEnabled());
         liquibase.setLabels(liquibaseProperties.getLabels());
-        liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
         liquibase.setRollbackFile(liquibaseProperties.getRollbackFile());
         liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
         return liquibase;
