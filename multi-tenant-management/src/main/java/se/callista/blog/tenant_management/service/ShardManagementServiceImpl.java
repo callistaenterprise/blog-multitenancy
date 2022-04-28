@@ -20,8 +20,6 @@ public class ShardManagementServiceImpl implements ShardManagementService {
 
     @Value("${multitenancy.master.database}")
     private String database;
-    @Value("${multitenancy.shard.datasource.url-prefix}")
-    private String urlPrefix;
     @Value("${multitenancy.shard.max-tenants}")
     private int maxTenants;
 
@@ -34,20 +32,18 @@ public class ShardManagementServiceImpl implements ShardManagementService {
         if (!shardsWithFreeCapacity.isEmpty()) {
             Shard shard = shardsWithFreeCapacity.get(0);
             shard.addTenant(tenant);
-            log.info("Allocated tenant {} to shard {}", tenant.getTenantId(), shard.getUrl());
+            log.info("Allocated tenant {} to shard {}", tenant.getTenantId(), shard.getDb());
         } else {
             int newShardIndex = ((int) shardRepository.count()) + 1;
             String newShardName = database + DATABASE_NAME_INFIX + newShardIndex;
-            String newShardUrl = urlPrefix + newShardName;
             Shard shard = Shard.builder()
                 .id(newShardIndex)
                 .db(newShardName)
-                .url(newShardUrl)
                 .build();
             shardInitializer.initializeShard(shard);
             shard.addTenant(tenant);
             shardRepository.save(shard);
-            log.info("Allocated tenant {} to new shard {}", tenant.getTenantId(), shard.getUrl());
+            log.info("Allocated tenant {} to new shard {}", tenant.getTenantId(), shard.getDb());
         }
     }
 

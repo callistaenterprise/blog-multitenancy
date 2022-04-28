@@ -1,6 +1,5 @@
-package se.callista.blog.service.multi_tenancy.config.tenant.hibernate;
+package se.callista.blog.service.multi_tenancy.config.shard.hibernate;
 
-import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.github.benmanes.caffeine.cache.RemovalListener;
@@ -53,10 +52,13 @@ public class DynamicShardingMultiTenantConnectionProvider
     @Value("${multitenancy.datasource-cache.expireAfterAccess:#{null}}")
     private Integer datasourceCacheExpireAfterAccess;
 
-    @Value("${multitenancy.tenant.datasource.username}")
+    @Value("${multitenancy.shard.datasource.url-prefix}")
+    private String urlPrefix;
+
+    @Value("${multitenancy.shard.username}")
     private String username;
 
-    @Value("${multitenancy.tenant.datasource.password}")
+    @Value("${multitenancy.shard.password}")
     private String password;
 
     private LoadingCache<String, Tenant> tenants;
@@ -110,7 +112,7 @@ public class DynamicShardingMultiTenantConnectionProvider
 
         ds.setUsername(username);
         ds.setPassword(password);
-        ds.setJdbcUrl(shard.getUrl());
+        ds.setJdbcUrl(urlPrefix + shard.getDb());
 
         ds.setPoolName(shard.getDb() + TENANT_POOL_NAME_SUFFIX);
 

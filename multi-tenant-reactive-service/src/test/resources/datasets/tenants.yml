@@ -1,0 +1,8 @@
+tenant:
+  - tenant_id: tenant1
+    shard_id: 1
+  - tenant_id: tenant2
+    shard_id: 1
+  - tenant_id: tenant3
+    shard_id: 2
+    

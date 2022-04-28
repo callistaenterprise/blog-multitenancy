@@ -29,10 +29,6 @@ public class Shard {
     @Column(name = "db")
     private String db;
 
-    @Size(max = 256)
-    @Column(name = "url")
-    private String url;
-
     @Column(name = "no_of_tenants")
     private int numberOfTenants;
 

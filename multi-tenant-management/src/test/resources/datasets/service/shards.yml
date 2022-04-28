@@ -1,10 +1,8 @@
 shard:
   - id: 1
     db: "regex:.*_shard_1"
-    url: "regex:^jdbc:postgresql:.*/.*_shard_1$"
     no_of_tenants: 2
   - id: 2
     db: "regex:.*_shard_2"
-    url: "regex:^jdbc:postgresql:.*/.*_shard_2$"
     no_of_tenants: 1
     

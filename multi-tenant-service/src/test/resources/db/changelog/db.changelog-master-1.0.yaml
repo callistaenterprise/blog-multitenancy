@@ -17,9 +17,6 @@ databaseChangeLog:
             name: db
             type: VARCHAR(30)
         - column:
-            name: url
-            type: VARCHAR(256)
-        - column:
             name: no_of_tenants
             type: BIGINT
 

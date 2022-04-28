@@ -31,6 +31,7 @@ public class ShardInitializerImpl implements ShardInitializer {
     private final LiquibaseProperties liquibaseProperties;
     private final ResourceLoader resourceLoader;
 
+    private final String urlPrefix;
     private final String username;
     private final String password;
 
@@ -39,11 +40,13 @@ public class ShardInitializerImpl implements ShardInitializer {
                     JdbcTemplate jdbcTemplate,
                     @Qualifier("shardLiquibaseProperties") LiquibaseProperties liquibaseProperties,
                     ResourceLoader resourceLoader,
+                    @Value("${multitenancy.shard.datasource.url-prefix}") String urlPrefix,
                     @Value("${multitenancy.master.datasource.username}") String username,
                     @Value("${multitenancy.master.datasource.password}") String password) {
         this.jdbcTemplate = jdbcTemplate;
         this.liquibaseProperties = liquibaseProperties;
         this.resourceLoader = resourceLoader;
+        this.urlPrefix = urlPrefix;
         this.username = username;
         this.password = password;
     }
@@ -58,7 +61,7 @@ public class ShardInitializerImpl implements ShardInitializer {
             throw new ShardCreationException("Error when creating db: " + shard.getDb(), e);
         }
         try (Connection connection =
-                        DriverManager.getConnection(shard.getUrl(), username, password)) {
+                        DriverManager.getConnection(urlPrefix + shard.getDb(), username, password)) {
             DataSource shardDataSource = new SingleConnectionDataSource(connection, false);
             runLiquibase(shardDataSource);
             log.info("Initialized shard {}", shard.getDb());

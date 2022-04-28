@@ -24,20 +24,21 @@ multitenancy:
       packages: se.callista.blog.service.multi_tenancy.domain
     liquibase:
       enabled: false
-  tenant:
-    datasource:
-      username: app_user
-      password: secret
-    repository:
-      packages: se.callista.blog.service.repository
-    entityManager:
-      packages: se.callista.blog.service.domain
   shard:
+    username: app_user
+    password: secret
+    datasource:
+      url-prefix: jdbc:postgresql://localhost:5432/
     liquibase:
       enabled: true
       changeLog: classpath:db/changelog/db.changelog-shard.yaml
       parameters:
         schema: ${spring.jpa.properties.hibernate.default_schema}
         database: ${multitenancy.master.database}
-        app_db_user: ${multitenancy.tenant.datasource.username}
-        app_db_password: ${multitenancy.tenant.datasource.password}
+        app_db_user: ${multitenancy.shard.username}
+        app_db_password: ${multitenancy.shard.password}
+  tenant:
+    repository:
+      packages: se.callista.blog.service.repository
+    entityManager:
+      packages: se.callista.blog.service.domain

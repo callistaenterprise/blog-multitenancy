@@ -1,9 +1,8 @@
 package se.callista.blog.service.services;
 
 
-import se.callista.blog.service.model.ProductValue;
-
 import java.util.List;
+import se.callista.blog.service.model.ProductValue;
 
 public interface ProductService {
 

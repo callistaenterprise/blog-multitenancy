@@ -32,7 +32,7 @@ class ShardRepositoryTest {
 
         Optional<Shard> shard = shardRepository.findById(1);
         assertThat(shard).isPresent();
-        assertThat(shard.get().getUrl()).endsWith("shard_1");
+        assertThat(shard.get().getDb()).endsWith("shard_1");
 
     }
 

@@ -15,7 +15,7 @@ multitenancy:
       changeLog: classpath:db/changelog/db.changelog-master.yaml  
   shard:
     datasource:
-      url-prefix: ${DB_URL}
+      url-prefix: jdbc:postgresql://${DB_HOST}/
     liquibase:
       enabled: true
       parameters:

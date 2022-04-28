@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.config.tenant.hibernate;
+package se.callista.blog.service.multi_tenancy.config.shard.hibernate;
 
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;
