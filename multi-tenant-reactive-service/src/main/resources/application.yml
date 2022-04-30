@@ -8,10 +8,10 @@ multitenancy:
     maximumSize: 100
     expireAfterAccess: 10
   master:
-    database: blog
+    database: master
     schema: public
     datasource:
-      url: jdbc:postgresql://localhost:5432/blog
+      url: jdbc:postgresql://localhost:5432/master
       username: postgres
       password: secret
       hikari:

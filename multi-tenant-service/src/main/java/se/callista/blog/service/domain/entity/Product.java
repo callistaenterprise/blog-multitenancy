@@ -13,7 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import se.callista.blog.service.multi_tenancy.domain.entity.AbstractBaseEntity;
+import se.callista.blog.service.multitenancy.domain.entity.AbstractBaseEntity;
 
 @Entity
 @Table(name = "product")

@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import se.callista.blog.service.model.ProductValue;
-import se.callista.blog.service.multi_tenancy.interceptor.TenantInterceptor;
+import se.callista.blog.service.multitenancy.interceptor.TenantInterceptor;
 import se.callista.blog.service.services.ProductService;
 
 @WebMvcTest(ProductApiController.class)

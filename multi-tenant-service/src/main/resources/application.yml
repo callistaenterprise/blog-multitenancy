@@ -11,17 +11,17 @@ spring:
     open-in-view: false
 multitenancy:
   master:
-    database: blog
+    database: master
     datasource:
-      url: jdbc:postgresql://localhost:5432/blog
+      url: jdbc:postgresql://localhost:5432/master
       username: postgres
       password: secret
       hikari:
         maximum-pool-size: 1
     repository:
-      packages: se.callista.blog.service.multi_tenancy.repository
+      packages: se.callista.blog.service.multitenancy.repository
     entityManager:
-      packages: se.callista.blog.service.multi_tenancy.domain
+      packages: se.callista.blog.service.multitenancy.domain
     liquibase:
       enabled: false
   shard:

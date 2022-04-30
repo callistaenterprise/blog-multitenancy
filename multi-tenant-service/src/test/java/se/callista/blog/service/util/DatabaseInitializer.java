@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
-import se.callista.blog.service.multi_tenancy.config.shard.liquibase.DynamicShardingMultiTenantSpringLiquibase;
+import se.callista.blog.service.multitenancy.config.shard.liquibase.DynamicShardingMultiTenantSpringLiquibase;
 
 @Component
 public class DatabaseInitializer {

@@ -1,6 +1,6 @@
 package se.callista.blog.service.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -9,15 +9,11 @@ import se.callista.blog.service.domain.entity.Product;
 import se.callista.blog.service.model.ProductValue;
 import se.callista.blog.service.repository.ProductRepository;
 
+@RequiredArgsConstructor
 @Component
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
-    @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @Override
     @Transactional(readOnly = true)
