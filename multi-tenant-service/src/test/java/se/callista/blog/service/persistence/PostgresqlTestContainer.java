@@ -20,8 +20,8 @@ public class PostgresqlTestContainer extends PostgreSQLContainer<PostgresqlTestC
     @Override
     public void start() {
         super.start();
-        System.setProperty("DB_NAME", container.getDatabaseName());
         System.setProperty("DB_HOST", container.getContainerIpAddress() + ":" + container.getMappedPort(POSTGRESQL_PORT));
+        System.setProperty("DB_NAME", container.getDatabaseName());
         System.setProperty("DB_URL", container.getJdbcUrl());
         System.setProperty("DB_USERNAME", container.getUsername());
         System.setProperty("DB_PASSWORD", container.getPassword());

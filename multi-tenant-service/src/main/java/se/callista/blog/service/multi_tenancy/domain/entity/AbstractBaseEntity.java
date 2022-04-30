@@ -1,5 +1,10 @@
 package se.callista.blog.service.multi_tenancy.domain.entity;
 
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,12 +12,6 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import se.callista.blog.service.multi_tenancy.listener.TenantListener;
-
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 @MappedSuperclass
 @Getter
