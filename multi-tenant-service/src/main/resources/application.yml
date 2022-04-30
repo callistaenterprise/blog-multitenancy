@@ -14,11 +14,11 @@ multitenancy:
     expireAfterAccess: 10
   master:
     repository:
-      packages: se.callista.blog.service.multi_tenancy.repository
+      packages: se.callista.blog.service.multitenancy.repository
     entityManager:
-      packages: se.callista.blog.service.multi_tenancy.domain
+      packages: se.callista.blog.service.multitenancy.domain
     datasource:
-      url: jdbc:postgresql://localhost:5432/blog
+      url: jdbc:postgresql://localhost:5432/master
       username: postgres
       password: secret
     liquibase:

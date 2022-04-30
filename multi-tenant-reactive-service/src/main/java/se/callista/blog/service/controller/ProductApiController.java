@@ -2,7 +2,7 @@ package se.callista.blog.service.controller;
 
 import java.net.URI;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +17,12 @@ import reactor.core.publisher.Mono;
 import se.callista.blog.service.model.ProductValue;
 import se.callista.blog.service.services.ProductService;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/")
 public class ProductApiController {
 
     private final ProductService productService;
-
-    @Autowired
-    public ProductApiController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @GetMapping(value = "/products", produces = {ContentType.PRODUCTS_1_0})
     public Flux<ProductValue> getProducts() {

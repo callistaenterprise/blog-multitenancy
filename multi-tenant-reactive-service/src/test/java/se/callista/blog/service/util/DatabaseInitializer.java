@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
-import se.callista.blog.service.multi_tenancy.config.tenant.liquibase.DynamicDataSourceBasedMultiTenantSpringLiquibase;
+import se.callista.blog.service.multitenancy.config.tenant.liquibase.DynamicDataSourceBasedMultiTenantSpringLiquibase;
 
 @Component
 public class DatabaseInitializer {
