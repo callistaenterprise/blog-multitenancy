@@ -22,4 +22,4 @@ target/
 ### Other ###
 *.orig
 *.hprof
-lombok.config
+

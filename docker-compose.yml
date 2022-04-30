@@ -8,9 +8,9 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
-      POSTGRES_DB: blog
+      POSTGRES_DB: master
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d blog"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d master"]
       interval: 10s
       timeout: 5s
       retries: 3

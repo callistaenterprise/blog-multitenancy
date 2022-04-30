@@ -6,7 +6,7 @@ multitenancy:
     expireAfterAccess: 10
   master:
     datasource:
-      url: jdbc:postgresql://localhost:5432/blog
+      url: jdbc:postgresql://localhost:5432/master
       username: postgres
       password: secret
   tenant:
@@ -14,6 +14,6 @@ multitenancy:
       url: r2dbc:pool:postgres://localhost:5432
       username: postgres
       password: secret
-      name: blog
+      name: master
     liquibase:
       changeLog: classpath:db/changelog/db.changelog-tenant.yaml

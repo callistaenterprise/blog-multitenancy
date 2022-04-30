@@ -11,8 +11,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.callista.blog.service.annotation.SpringBootDbIntegrationTest;
 import se.callista.blog.service.model.ProductValue;
-import se.callista.blog.service.multi_tenancy.config.tenant.liquibase.DynamicSchemaBasedMultiTenantSpringLiquibase;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.config.tenant.liquibase.DynamicSchemaBasedMultiTenantSpringLiquibase;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 import se.callista.blog.service.persistence.PostgresqlTestContainer;
 
 @Testcontainers
