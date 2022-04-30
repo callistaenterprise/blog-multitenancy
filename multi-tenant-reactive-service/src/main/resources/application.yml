@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/blog
+    url: jdbc:postgresql://localhost:5432/master
     username: postgres
     password: secret
     hikari:
@@ -11,12 +11,12 @@ spring:
     url: r2dbc:pool:postgres://localhost:5432
     username: app_user
     password: secret
-    name: blog
+    name: master
   liquibase:
     enabled: true
     changeLog: classpath:db/changelog/db.changelog-tenant.yaml
     parameters:
-      database: blog
+      database: master
       schema: public
       username: app_user
       password: secret

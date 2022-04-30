@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import se.callista.blog.service.multi_tenancy.domain.entity.AbstractBaseEntity;
+import se.callista.blog.service.multitenancy.domain.entity.AbstractBaseEntity;
 
 @Table("product")
 @Getter

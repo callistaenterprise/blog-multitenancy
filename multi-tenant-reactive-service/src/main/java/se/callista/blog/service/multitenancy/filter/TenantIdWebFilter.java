@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.filter;
+package se.callista.blog.service.multitenancy.filter;
 
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 
 @Component
 public class TenantIdWebFilter implements WebFilter {

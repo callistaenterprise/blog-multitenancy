@@ -14,7 +14,7 @@ import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
 import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.util.StringUtils;
-import se.callista.blog.service.multi_tenancy.connection.TenantAwareConnectionFactory;
+import se.callista.blog.service.multitenancy.connection.TenantAwareConnectionFactory;
 
 @RequiredArgsConstructor
 @Configuration

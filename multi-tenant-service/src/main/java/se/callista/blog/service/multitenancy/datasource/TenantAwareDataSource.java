@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.datasource;
+package se.callista.blog.service.multitenancy.datasource;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.datasource.ConnectionProxy;
 import org.springframework.jdbc.datasource.DelegatingDataSource;
 import org.springframework.lang.Nullable;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 
 /**
  * Tenant-Aware Datasource that decorates Connections with

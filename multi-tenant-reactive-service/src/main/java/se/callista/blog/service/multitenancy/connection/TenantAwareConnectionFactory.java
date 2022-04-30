@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.connection;
+package se.callista.blog.service.multitenancy.connection;
 
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;
@@ -8,12 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 
 @RequiredArgsConstructor
 @Slf4j
 public class TenantAwareConnectionFactory implements ConnectionFactory {
-    private final ConnectionFactory connectionFactory;
 
     // Copy of io.r2dbc.postgresql.PostgresqlConnectionFactoryMetadata, which is not public
     static final class PostgresqlConnectionFactoryMetadata implements ConnectionFactoryMetadata {
@@ -30,6 +29,8 @@ public class TenantAwareConnectionFactory implements ConnectionFactory {
             return NAME;
         }
     }
+
+    private final ConnectionFactory connectionFactory;
 
     @Override
     public Publisher<? extends Connection> create() {

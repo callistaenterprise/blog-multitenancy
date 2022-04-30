@@ -1,8 +1,8 @@
-package se.callista.blog.service.multi_tenancy.async;
+package se.callista.blog.service.multitenancy.async;
 
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.lang.NonNull;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 
 public class TenantAwareTaskDecorator implements TaskDecorator {
 

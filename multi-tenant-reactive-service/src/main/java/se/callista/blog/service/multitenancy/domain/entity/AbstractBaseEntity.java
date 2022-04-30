@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.domain.entity;
+package se.callista.blog.service.multitenancy.domain.entity;
 
 import java.io.Serializable;
 import javax.validation.constraints.Size;

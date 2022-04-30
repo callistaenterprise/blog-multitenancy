@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.util;
+package se.callista.blog.service.multitenancy.util;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;

@@ -9,7 +9,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.callista.blog.service.annotation.SpringBootDbIntegrationTest;
 import se.callista.blog.service.domain.entity.Product;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 import se.callista.blog.service.persistence.PostgresqlTestContainer;
 
 @Testcontainers

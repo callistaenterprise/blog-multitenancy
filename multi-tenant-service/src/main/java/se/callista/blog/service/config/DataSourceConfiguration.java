@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import se.callista.blog.service.multi_tenancy.datasource.TenantAwareDataSource;
+import se.callista.blog.service.multitenancy.datasource.TenantAwareDataSource;
 
 @Configuration
 public class DataSourceConfiguration {
