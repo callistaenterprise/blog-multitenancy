@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/blog
+    url: jdbc:postgresql://localhost:5432/master
     username: postgres
     password: secret
   jpa:

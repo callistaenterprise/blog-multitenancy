@@ -1,10 +1,10 @@
-package se.callista.blog.service.multi_tenancy.listener;
+package se.callista.blog.service.multitenancy.listener;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
-import se.callista.blog.service.multi_tenancy.domain.entity.TenantAware;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.domain.entity.TenantAware;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 
 public class TenantListener {
 

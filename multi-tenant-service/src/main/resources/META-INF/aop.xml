@@ -1,12 +1,12 @@
 <aspectj>
 
     <weaver options="-Xreweavable -Xset:weaveJavaxPackages=true">
-        <include within="se.callista.blog.service.multi_tenancy.aspect.TenantFilterAspect"/>
+        <include within="se.callista.blog.service.multitenancy.aspect.TenantFilterAspect"/>
         <include within="org.hibernate.internal.SessionFactoryImpl.SessionBuilderImpl"/>
     </weaver>
 
     <aspects>
-        <aspect name="se.callista.blog.service.multi_tenancy.aspect.TenantFilterAspect"/>
+        <aspect name="se.callista.blog.service.multitenancy.aspect.TenantFilterAspect"/>
     </aspects>
 
 </aspectj>

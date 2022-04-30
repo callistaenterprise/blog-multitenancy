@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.domain.entity;
+package se.callista.blog.service.multitenancy.domain.entity;
 
 public interface TenantAware {
 

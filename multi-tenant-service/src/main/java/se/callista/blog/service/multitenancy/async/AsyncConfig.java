@@ -1,4 +1,4 @@
-package se.callista.blog.service.multi_tenancy.async;
+package se.callista.blog.service.multitenancy.async;
 
 import java.util.concurrent.Executor;
 import org.springframework.beans.factory.config.BeanDefinition;

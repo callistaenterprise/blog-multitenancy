@@ -1,10 +1,10 @@
-package se.callista.blog.service.multi_tenancy.aspect;
+package se.callista.blog.service.multitenancy.aspect;
 
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.hibernate.Session;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 
 @Aspect
 public class TenantFilterAspect {
