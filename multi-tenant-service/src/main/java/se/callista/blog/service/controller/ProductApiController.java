@@ -1,6 +1,10 @@
 package se.callista.blog.service.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import se.callista.blog.service.model.ProductValue;
 import se.callista.blog.service.services.ProductService;
 
-import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/")
-public class ProductApiController extends AbstractBaseApiController {
+public class ProductApiController {
 
     private final ProductService productService;
-
-    @Autowired
-    public ProductApiController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @GetMapping(value = "/products", produces = {ContentType.PRODUCTS_1_0})
     public ResponseEntity<List<ProductValue>> getProducts() {

@@ -1,9 +1,8 @@
 package se.callista.blog.service.controller;
 
-import org.springframework.http.HttpStatus;
-
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import org.springframework.http.HttpStatus;
 
 public class ApiException extends RuntimeException {
 

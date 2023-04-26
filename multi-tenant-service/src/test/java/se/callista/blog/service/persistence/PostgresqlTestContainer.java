@@ -1,6 +1,7 @@
 package se.callista.blog.service.persistence;
 
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 
 public class PostgresqlTestContainer extends PostgreSQLContainer<PostgresqlTestContainer> {
     private static final String IMAGE_VERSION = "postgres:11.5";
@@ -12,7 +13,8 @@ public class PostgresqlTestContainer extends PostgreSQLContainer<PostgresqlTestC
 
     public static PostgresqlTestContainer getInstance() {
         if (container == null) {
-            container = new PostgresqlTestContainer();
+            container = new PostgresqlTestContainer()
+                .waitingFor(Wait.defaultWaitStrategy());
         }
         return container;
     }
@@ -20,8 +22,8 @@ public class PostgresqlTestContainer extends PostgreSQLContainer<PostgresqlTestC
     @Override
     public void start() {
         super.start();
-        System.setProperty("DB_NAME", container.getDatabaseName());
         System.setProperty("DB_HOST", container.getContainerIpAddress() + ":" + container.getMappedPort(POSTGRESQL_PORT));
+        System.setProperty("DB_NAME", container.getDatabaseName());
         System.setProperty("DB_URL", container.getJdbcUrl());
         System.setProperty("DB_USERNAME", container.getUsername());
         System.setProperty("DB_PASSWORD", container.getPassword());

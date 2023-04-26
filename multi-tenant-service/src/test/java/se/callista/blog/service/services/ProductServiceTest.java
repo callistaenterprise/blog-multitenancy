@@ -1,19 +1,18 @@
 package se.callista.blog.service.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.github.database.rider.core.api.dataset.DataSet;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.callista.blog.service.annotation.SpringBootDbIntegrationTest;
 import se.callista.blog.service.model.ProductValue;
-import se.callista.blog.service.multi_tenancy.util.TenantContext;
+import se.callista.blog.service.multitenancy.util.TenantContext;
 import se.callista.blog.service.persistence.PostgresqlTestContainer;
-
-import javax.persistence.EntityNotFoundException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Testcontainers
 @SpringBootDbIntegrationTest
